@@ -125,10 +125,30 @@ alembic -c alembic.ini upgrade head
 
 Alternatively, run the same command **on your machine** with `DATABASE_URL` set to the **External** database URL from Render (so it connects to the cloud DB).
 
-### 7. (Optional) Deploy the frontend
-- Deploy the `frontend` folder to Vercel, Netlify, or another host.
-- Set **VITE_API_URL** at build time to your Render API URL, e.g. `https://primetrade-api.onrender.com`.
-- In Render, set **CORS_ORIGINS** to that frontend URL (e.g. `https://your-app.vercel.app`).
+### 7. Deploy the frontend on Vercel
+- Go to https://vercel.com and import your GitHub repo.
+- **Important:** In **Project Settings → General**, set **Root Directory** to `frontend` (so Vercel builds only the frontend app).
+- **Environment Variables** (in Vercel project): add **VITE_API_URL** = your Render backend URL, e.g. `https://primetrade-api.onrender.com` (no trailing slash).
+- Deploy. The build runs `npm install` and `npm run build` inside the `frontend` folder.
+- In Render, set **CORS_ORIGINS** to your Vercel URL (e.g. `https://your-project.vercel.app`).
+
+---
+
+## Troubleshooting
+
+### Render backend shows "Canceled"
+- **Canceled** usually means the service was stopped (by you, or due to an error).
+- **Fix:** In Render Dashboard → your Web Service → click **Manual Deploy → Deploy latest commit** to start it again.
+- If you're on the **free tier**, the service **sleeps after ~15 minutes** of no traffic. Visiting the backend URL (or your frontend) will wake it; the first request may take 30–60 seconds.
+- Ensure **Environment** has **DATABASE_URL** (Render Postgres Internal URL), **JWT_SECRET_KEY**, and **CORS_ORIGINS**. Wrong or missing **DATABASE_URL** will cause startup to fail and the service may be marked canceled.
+
+### Vercel frontend build fails (e.g. "Permission denied" or "tsc")
+- Set **Root Directory** to `frontend` in Vercel (Project Settings → General).
+- The build script must be **`vite build`** only (no `tsc` in the build command). If you still see a tsc error, pull the latest code: `package.json` should have `"build": "vite build"`.
+- Add **VITE_API_URL** in Vercel Environment Variables (your Render backend URL) so the frontend can call the API.
+
+### Backend fails on Render with "connection to localhost refused"
+- **DATABASE_URL** must be the **Internal Database URL** from your Render PostgreSQL (not `localhost`). Set it in the Web Service → Environment.
 
 ---
 
