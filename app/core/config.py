@@ -2,7 +2,11 @@
 from functools import lru_cache
 from typing import Optional
 
+from dotenv import load_dotenv
 from pydantic_settings import BaseSettings
+
+# Load .env so os.getenv and BaseSettings see env vars (e.g. on Render, in shell)
+load_dotenv()
 
 
 class Settings(BaseSettings):
@@ -12,8 +16,8 @@ class Settings(BaseSettings):
     APP_NAME: str = "Primetrade API"
     DEBUG: bool = False
 
-    # Database
-    DATABASE_URL: str = "postgresql://postgres:postgres@localhost:5432/primetrade"
+    # Database – must be set via DATABASE_URL env (no hardcoded localhost for production)
+    DATABASE_URL: str = ""
 
     # JWT
     JWT_SECRET_KEY: str = "your-super-secret-key-change-in-production"
@@ -28,7 +32,9 @@ class Settings(BaseSettings):
 
     class Config:
         env_file = ".env"
+        env_file_encoding = "utf-8"
         case_sensitive = True
+        extra = "ignore"
 
 
 @lru_cache

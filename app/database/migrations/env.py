@@ -1,9 +1,13 @@
-"""Alembic environment: use app config and models."""
+"""Alembic environment: use DATABASE_URL from env and app models."""
+import os
 import sys
 from pathlib import Path
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from dotenv import load_dotenv
+load_dotenv()
 
 from logging.config import fileConfig
 from sqlalchemy import engine_from_config
@@ -17,9 +21,11 @@ if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 target_metadata = Base.metadata
 
-# Override sqlalchemy.url from app settings
-settings = get_settings()
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+# Use DATABASE_URL from env (Render, Docker) or from Settings (.env)
+database_url = os.getenv("DATABASE_URL") or get_settings().DATABASE_URL
+if not database_url:
+    raise ValueError("DATABASE_URL must be set for migrations (env or .env)")
+config.set_main_option("sqlalchemy.url", database_url)
 
 
 def run_migrations_offline() -> None:

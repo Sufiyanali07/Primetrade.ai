@@ -7,8 +7,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.core.config import get_settings
-from app.database.connection import engine
-from app.database.models import Base
 from app.utils.exceptions import AppException
 from app.utils.logger import get_logger, log_request
 
@@ -22,10 +20,8 @@ settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """Create tables on startup (optional; Alembic preferred in production)."""
-    Base.metadata.create_all(bind=engine)
+    """Startup/shutdown. Use Alembic for schema: alembic upgrade head."""
     yield
-    # shutdown cleanup if needed
 
 
 app = FastAPI(

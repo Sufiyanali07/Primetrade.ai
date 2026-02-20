@@ -7,7 +7,7 @@ services:
     runtime: python
 
     buildCommand: pip install -r requirements.txt
-    # Render sets PORT (e.g. 10000). Must use 0.0.0.0 so the service is reachable.
+    # Production: no --reload. Render sets PORT; must bind to 0.0.0.0 and $PORT.
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
 
     envVars:

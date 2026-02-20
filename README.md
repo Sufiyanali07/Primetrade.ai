@@ -2,6 +2,8 @@
 
 A production-ready assignment project: **FastAPI + PostgreSQL + JWT + RBAC** backend and **React + shadcn/ui** frontend.
 
+**→ Step-by-step guide:** see **[STEPS.md](./STEPS.md)** for local setup and Render deployment.
+
 ---
 
 ## Tech Stack
