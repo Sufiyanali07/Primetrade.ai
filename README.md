@@ -74,6 +74,28 @@ project/
 
 ---
 
+## Start commands (run both)
+
+Use **two terminals** (backend and frontend run separately).
+
+**Terminal 1 – Backend** (from project root, with venv activated):
+
+```bash
+uvicorn app.main:app --reload --port 8000
+```
+
+**Terminal 2 – Frontend** (from project root):
+
+```bash
+cd frontend
+npm run dev
+```
+
+- **Backend:** http://localhost:8000 · API docs: http://localhost:8000/api/docs  
+- **Frontend:** http://localhost:5173  
+
+---
+
 ## How to Run
 
 ### Backend
